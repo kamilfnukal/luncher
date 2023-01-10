@@ -7,12 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace Luncher.Adapters.ThirdParty
 {
-    internal class PadowetzRestaurant : RestaurantBase
+    internal class GardenRestaurant : RestaurantBase
     {
         private readonly HtmlWeb _htmlWeb;
-        private string Url => $"http://www.restaurant-padowetz.cz/poledni-menu.html";
+        private string Url => $"https://gardenpub.cz/poledni-menu";
 
-        public PadowetzRestaurant() : base(RestaurantType.Padowetz)
+        public GardenRestaurant() : base(RestaurantType.Garden)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             _htmlWeb = new HtmlWeb();
