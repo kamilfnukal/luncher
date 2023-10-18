@@ -10,7 +10,7 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
     {
         private readonly HtmlWeb _htmlWeb;
 
-        private string Url => $"https://www.menicka.cz/3178-charlie-square.html";
+        private string Url => $"https://www.charliessquare.cz/menu/";
 
         public CharliesRestaurant() : base(RestaurantType.Charlies)
         {
@@ -22,24 +22,29 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
         {
             var htmlDocument = await _htmlWeb.LoadFromWebAsync(Url, cancellationToken);
 
-            var todayMenuNode = htmlDocument.DocumentNode.Descendants("div")
-                .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "menicka")
-                .First();
-
-
-            var soaps = todayMenuNode.Descendants("li")
-                .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "polevka")
-                .Select(s => s.ChildNodes[1].InnerText)
-                .Select(s => Soap.Create(Regex.Replace(s, @"^[0-9]\.", "")))
+            var meals = htmlDocument.DocumentNode.Descendants("table")
+                .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "menu-one-day menu-to-week")
+                .FirstOrDefault()
+                .Descendants("tbody")
+                .FirstOrDefault()
+                .Descendants("tr")
+                .Skip(1)
+                .Select(tr => Meal.Create(tr.InnerText.Trim()))
                 .ToList();
 
-            var meals = todayMenuNode.Descendants("li")
-                .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "jidlo")
-                .Select(s => s.ChildNodes[1].InnerText)
-                .Select(s => Meal.Create(Regex.Replace(s, @"^[0-9]\.", "")))
-                .ToList();
+            var soap = new List<Soap>
+            {
+                Soap.Create(htmlDocument.DocumentNode.Descendants("table")
+                    .Where(s => s.Attributes.Contains("class") &&
+                                s.Attributes["class"].Value == "menu-one-day")
+                    .FirstOrDefault()
+                    .Descendants("tbody")
+                    .FirstOrDefault()
+                    .Descendants("tr")
+                    .Last().InnerText.Trim())
+            };
 
-            return Restaurant.Create(Type, Menu.Create(meals, soaps));
+            return Restaurant.Create(Type, Menu.Create(meals, soap));
 
         }
     }
