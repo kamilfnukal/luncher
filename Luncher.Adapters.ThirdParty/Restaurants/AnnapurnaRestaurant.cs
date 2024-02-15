@@ -8,6 +8,7 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
     internal class AnnapurnaRestaurant : RestaurantBase
     {
         private readonly HtmlWeb _htmlWeb;
+        // Hello
         private string Url => $"http://www.indicka-restaurace-annapurna.cz/";
 
         public AnnapurnaRestaurant() : base(RestaurantType.Annapurna)
