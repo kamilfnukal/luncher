@@ -9,6 +9,7 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
     internal class CharliesRestaurant : RestaurantBase
     {
         private readonly HtmlWeb _htmlWeb;
+        // TODO
 
         private string Url => $"https://www.charliessquare.cz/menu/";
 
