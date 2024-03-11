@@ -22,6 +22,7 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
         protected override async Task<Restaurant> GetInfoCoreAsync(CancellationToken cancellationToken)
         {
             var htmlDocument = await _htmlWeb.LoadFromWebAsync(Url, cancellationToken);
+            
 
             var meals = htmlDocument.DocumentNode.Descendants("table")
                 .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "menu-one-day menu-to-week")
@@ -32,6 +33,7 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
                 .Skip(1)
                 .Select(tr => Meal.Create(tr.InnerText.Trim()))
                 .ToList();
+            
 
             var soap = new List<Soap>
             {
