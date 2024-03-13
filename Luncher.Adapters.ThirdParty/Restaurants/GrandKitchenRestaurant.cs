@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using System.Net;
+using HtmlAgilityPack;
 using Luncher.Adapters.ThirdParty.Restaurants;
 using Luncher.Core.Entities;
 using Luncher.Domain.Entities;
@@ -29,13 +30,13 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
                                 s.Attributes["class"].Value == "fly-dish-menu container-min jidel").ToList().First();
 
                 var soaps = todayMenuNode.Descendants("h5")
-                    .Select(s => s.InnerText)
+                    .Select(s => WebUtility.HtmlDecode(s.InnerText))
                     .Select(Soap.Create)
                     .Take(1)
                     .ToList();
 
                 var meals = todayMenuNode.Descendants("h5")
-                    .Select(s => s.InnerText)
+                    .Select(s => WebUtility.HtmlDecode(s.InnerText))
                     .Select(Meal.Create)
                     .Skip(1)
                     .Take(3)
