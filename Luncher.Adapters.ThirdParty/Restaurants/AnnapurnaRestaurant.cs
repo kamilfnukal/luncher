@@ -8,7 +8,6 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
     internal class AnnapurnaRestaurant : RestaurantBase
     {
         private readonly HtmlWeb _htmlWeb;
-        // Hello
         private string Url => $"http://www.indicka-restaurace-annapurna.cz/";
 
         public AnnapurnaRestaurant() : base(RestaurantType.Annapurna)
@@ -25,14 +24,25 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
                 .First(s => s.InnerText.Contains(GetToday(), StringComparison.InvariantCultureIgnoreCase))
                 .NextSibling;
 
-            //TODO Soaps
+            var soupTextMatch = Regex.Match(todayMenuNode.InnerHtml, @"Polévky:\s*(.*?)<br><b>", RegexOptions.Singleline);
+
+            var soups = soupTextMatch.Success
+                ? soupTextMatch.Groups[1].Value
+                    .Split(new[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => Soap.Create(Regex.Replace(s, @"<.*?>", "").Trim()))
+                    .ToList()
+                : new List<Soap>();
 
             var meals = todayMenuNode
                 .Descendants("b")
-                .Select(s => Meal.Create(Regex.Replace(s.InnerText, @"^[0-9]\.", "")))
+                .Select(s => Meal.Create(Regex.Replace(s.InnerText, @"^[0-9]\.", "").Trim()))
                 .ToList();
 
-            return Domain.Entities.Restaurant.Create(Type, Menu.Create(meals));
+            if (soups.Count == 0)
+            {
+                return Restaurant.Create(Type, Menu.Create(meals));
+            }
+            return Restaurant.Create(Type, Menu.Create(meals, soups));
         }
 
         private string GetToday()
