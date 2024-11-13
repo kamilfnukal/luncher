@@ -9,5 +9,6 @@
         Tusto = 4,
         GrandKitchen = 5,
         Buffalo = 6,
+        Poupe = 7,
     }
 }
