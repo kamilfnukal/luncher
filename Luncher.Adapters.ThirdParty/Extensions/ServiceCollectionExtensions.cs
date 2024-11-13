@@ -17,6 +17,7 @@ namespace Luncher.Adapters.ThirdParty.Extensions
             services.AddSingleton<IRestaurant, GrandKitchenRestaurant>();
             services.AddSingleton<IRestaurant, BuffaloRestaurant>();
             services.AddSingleton<IRestaurant, PoupeRestaurant>();
+            services.AddSingleton<IRestaurant, NCRestaurant>();
             
             return services;
         }
