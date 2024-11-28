@@ -28,12 +28,22 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
                 .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "qode-advanced-pricing-list")
                 .Skip(dayOfWeek)
                 .FirstOrDefault()
-                .Descendants("h5")
-                .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "qode-apl-item-title")
+                .Descendants("div")
+                .Where(div => div.Attributes.Contains("class") && div.Attributes["class"].Value == "qode-apl-item")
                 .Skip(1)
-                .Select(tr => Meal.Create(tr.InnerText.Trim()))
+                .Select(item => 
+                {
+                    var title = item.Descendants("h5")
+                        .Where(h5 => h5.Attributes.Contains("class") && h5.Attributes["class"].Value == "qode-apl-item-title")
+                        .FirstOrDefault()?.InnerText.Trim();
+        
+                    var description = item.Descendants("div")
+                        .Where(div => div.Attributes.Contains("class") && div.Attributes["class"].Value == "qode-apl-item-description")
+                        .FirstOrDefault()?.InnerText.Trim();
+
+                    return Meal.Create($"{title} - {description}");
+                })
                 .ToList();
-            
 
             var soap = htmlDocument.DocumentNode.Descendants("div")
                 .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "q_elements_item_inner")
