@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <div class="text-center">
     @{
         var culture = new System.Globalization.CultureInfo("cs-CZ");
@@ -9,10 +10,37 @@
         TimeZoneInfo cetTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         DateTime utcNow = DateTime.UtcNow;
         DateTime cetNow = TimeZoneInfo.ConvertTimeFromUtc(utcNow, cetTimeZone);
+        var dayNum = (int)(5 - utcNow.DayOfWeek);
         var remaining = (new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 15, 55, 0) - cetNow);
-        <h1 class="display-4">Dnes je @day</h1>
-        <h2 class="display-6">Už jenom @remaining.Days dní @remaining.Hours hodin a @remaining.Minutes minut</h2>
+
+        string FormatDays(int days) {
+            if (days == 1) return "1 den";
+            if (days >= 2 && days <= 4) return $"{days} dny";
+            return $"{days} dní";
+        }
+
+        string FormatHours(int hours) {
+            if (hours == 1) return "1 hodina";
+            if (hours >= 2 && hours <= 4) return $"{hours} hodiny";
+            return $"{hours} hodin";
+        }
+
+        string FormatMinutes(int minutes) {
+            if (minutes == 1) return "1 minuta";
+            if (minutes >= 2 && minutes <= 4) return $"{minutes} minuty";
+            return $"{minutes} minut";
+        }
+
+        var dayText = FormatDays(dayNum);
+        var hourText = FormatHours(remaining.Hours);
+        var minuteText = FormatMinutes(remaining.Minutes);
     }
+    <h1 class="display-4">Dnes je @day</h1>
+    <div class="d-flex align-items-center justify-content-center mt-4">
+        <i class="fas fa-beer fa-3x me-3" style="color: goldenrod;"></i>
+        <h2 class="display-6">Už jenom @dayText @hourText a @minuteText</h2>
+    </div>
+    <hr/>
 </div>
 
 <div>
