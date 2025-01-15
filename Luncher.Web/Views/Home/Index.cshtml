@@ -6,7 +6,10 @@
     @{
         var culture = new System.Globalization.CultureInfo("cs-CZ");
         var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
-        var remaining = (new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 15, 55, 0) - DateTime.Now);
+        TimeZoneInfo cetTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        DateTime utcNow = DateTime.UtcNow;
+        DateTime cetNow = TimeZoneInfo.ConvertTimeFromUtc(utcNow, cetTimeZone);
+        var remaining = (new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 15, 55, 0) - cetNow);
         <h1 class="display-4">Dnes je @day</h1>
         <h2 class="display-6">Už jenom @remaining.Days dní @remaining.Hours hodin a @remaining.Minutes minut</h2>
     }
