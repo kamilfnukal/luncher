@@ -17,32 +17,6 @@ namespace Luncher.Adapters.ThirdParty.Restaurants
         protected override async Task<Domain.Entities.Restaurant> GetInfoCoreAsync(CancellationToken cancellationToken)
         {
             var htmlDocument = await _htmlWeb.LoadFromWebAsync(Url, cancellationToken);
-            
-            /*
-            var todayMenuNode = htmlDocument.DocumentNode.Descendants("p")
-                .Where(s => s.Attributes.Contains("class") && s.Attributes["class"].Value == "TJden")
-                .First(s => s.InnerText.Contains(GetToday(), StringComparison.InvariantCultureIgnoreCase))
-                .NextSibling;
-
-            var soupTextMatch = Regex.Match(todayMenuNode.InnerHtml, @"Polévky:\s*(.*?)<br><b>", RegexOptions.Singleline);
-
-            var soups = soupTextMatch.Success
-                ? soupTextMatch.Groups[1].Value
-                    .Split(new[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(s => Soap.Create(Regex.Replace(s, @"<.*?>", "").Trim()))
-                    .ToList()
-                : new List<Soap>();
-
-            var meals = todayMenuNode
-                .Descendants("b")
-                .Select(s => Meal.Create(Regex.Replace(s.InnerText, @"^[0-9]\.", "").Trim()))
-                .ToList();
-                */
-            
-            // The menu consists of soups and main dishes, the menu items are in weekly-menu-main-dish class div and first MenuItemTitle class span in the div
-            // so get all weekly-menu-main-dish divs and take first two, which will be soups, rest will be main courses
-            
-            // get current day in week (monday = 0, tuesday = 1, ...)
             int dayOfWeek = (int)DateTime.Now.DayOfWeek - 1;
             
             var curerntDay = htmlDocument.DocumentNode.Descendants("div")

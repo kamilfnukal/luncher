@@ -6,8 +6,6 @@
     @{
         var culture = new System.Globalization.CultureInfo("cs-CZ");
         var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
-        // time remaining until friday 15:55
-        // days, minutes, hours
         var remaining = (new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 15, 55, 0) - DateTime.Now);
         <h1 class="display-4">Dnes je @day</h1>
         <h2 class="display-6">Už jenom @remaining.Days dní @remaining.Hours hodin a @remaining.Minutes minut</h2>
