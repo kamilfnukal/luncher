@@ -1,3 +1,3 @@
 # luncher
 
-Luncher Web - http://luncher-app.azurewebsites.net/
+Luncher Web - http://jidelnicky.azurewebsites.net/
